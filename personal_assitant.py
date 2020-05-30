@@ -49,7 +49,7 @@ class personal_assistant():
             with sr.Microphone() as source_info:
                 print("[+] Listening...")
                 r.pause_threshold = 1
-                r.adjust_for_ambient_noise(source_info)
+                r.adjust_for_ambient_noise(source_info, duration = 3)
                 audio = r.listen(source_info)
 
             try:
@@ -57,7 +57,7 @@ class personal_assistant():
                 command = r.recognize_google(audio, language="en-US")
                 print("[+] Listened command: ", command)
                 break
-            
+
             except Exception as err:
                 print(err)
                 self.assistant_speaks("Could you please say that again?")
