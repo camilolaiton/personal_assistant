@@ -1,2 +1,3 @@
 pyttsx3
-sudo apt install libespeak1
+SpeechRecognition
+PyAudio

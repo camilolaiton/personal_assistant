@@ -1,5 +1,8 @@
 import pyttsx3
 import datetime
+import speech_recognition as sr
+
+# sudo apt install libespeak1 for fixing bug in linux
 
 class personal_assistant():
 
@@ -39,8 +42,31 @@ class personal_assistant():
         date = datetime.datetime.now().strftime("%A %d %B of %Y")
         self.assistant_speaks(date)
 
+    def get_command(self):
+        r = sr.Recognizer()
+        
+        while (True):
+            with sr.Microphone() as source_info:
+                print("[+] Listening...")
+                r.pause_threshold = 1
+                r.adjust_for_ambient_noise(source_info)
+                audio = r.listen(source_info)
+
+            try:
+                print("[+] Recognizing...")
+                command = r.recognize_google(audio, language="en-US")
+                print("[+] Listened command: ", command)
+                break
+            
+            except Exception as err:
+                print(err)
+                self.assistant_speaks("Could you please say that again?")
+        
+        return None
+
 def main():
     personal1 = personal_assistant("Rapha-L")
+    personal1.get_command()
     # personal1.assistant_says_time()
     # personal1.assitant_says_date()
 
