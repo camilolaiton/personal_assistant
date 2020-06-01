@@ -2,13 +2,14 @@ import pyttsx3
 import datetime
 import speech_recognition as sr
 
-# sudo apt install libespeak1 for fixing bug in linux
+# sudo apt install libespeak1 ||| for fixing bug in linux
 
 class personal_assistant():
 
     def __init__(self, name):
         self.voice_engine = pyttsx3.init()
         self.name = name
+        self.working = True
 
         """
             Configuring assistant's voice
@@ -44,12 +45,13 @@ class personal_assistant():
 
     def get_command(self):
         r = sr.Recognizer()
-        
+        command = None
+
         while (True):
             with sr.Microphone() as source_info:
                 print("[+] Listening...")
                 r.pause_threshold = 1
-                r.adjust_for_ambient_noise(source_info, duration = 3)
+                r.adjust_for_ambient_noise(source_info, duration = 1)
                 audio = r.listen(source_info)
 
             try:
@@ -62,11 +64,28 @@ class personal_assistant():
                 print(err)
                 self.assistant_speaks("Could you please say that again?")
         
-        return None
+        return command
+
+    def run(self):
+
+        while(self.working):
+
+            command = self.get_command().lower()
+
+            if self.name in command:
+                self.assistant_speaks('Yes, sir')
+
+            if 'time' in command:
+                self.assistant_says_time()
+            elif 'date' in command:
+                self.assitant_says_date()
+            elif 'offline' in command:
+                self.working = False
 
 def main():
-    personal1 = personal_assistant("Rapha-L")
-    personal1.get_command()
+    personal1 = personal_assistant("rafael")   # Rapha-L
+    # personal1.get_command()
+    personal1.run()
     # personal1.assistant_says_time()
     # personal1.assitant_says_date()
 
