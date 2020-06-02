@@ -1,8 +1,13 @@
 import pyttsx3
 import datetime
 import speech_recognition as sr
+import webbrowser as wb
+import subprocess
 
 # sudo apt install libespeak1 ||| for fixing bug in linux
+
+browser = None
+browsers = ("firefox", "chromium", None)
 
 class personal_assistant():
 
@@ -10,6 +15,7 @@ class personal_assistant():
         self.voice_engine = pyttsx3.init()
         self.name = name
         self.working = True
+        self.browser = wb.get(browsers[0])
 
         """
             Configuring assistant's voice
@@ -51,7 +57,7 @@ class personal_assistant():
             with sr.Microphone() as source_info:
                 print("[+] Listening...")
                 r.pause_threshold = 1
-                r.adjust_for_ambient_noise(source_info, duration = 1)
+                r.adjust_for_ambient_noise(source_info, duration = 0.5)
                 audio = r.listen(source_info)
 
             try:
@@ -64,13 +70,33 @@ class personal_assistant():
                 print(err)
                 self.assistant_speaks("Could you please say that again?")
         
-        return command
+        return command.lower()
+
+    def open_browser(self):
+        self.assistant_speaks("Where should I open it?")
+        page = self.get_command()
+        self.assistant_speaks("Openning in ".format(browsers[0]))
+        self.browser.open(page, new=0, autoraise=True)
+
+    def shell_intruction(self):
+        self.assistant_speaks("What do you want to execute?")
+        shell_command = self.get_command()
+        print(shell_command)
+        self.assistant_speaks("Executing in command in shell")
+
+        try:
+            out = subprocess.run(shell_command.split(' '))
+            self.assistant_speaks("Showing results in actual shell")
+            print("out: ", out)
+    
+        except Exception:
+            self.assistant_speaks("Sir, there's an error with your command. Try again.")
 
     def run(self):
 
         while(self.working):
 
-            command = self.get_command().lower()
+            command = self.get_command()
 
             if self.name in command:
                 self.assistant_speaks('Yes, sir')
@@ -79,11 +105,18 @@ class personal_assistant():
                 self.assistant_says_time()
             elif 'date' in command:
                 self.assitant_says_date()
+            elif 'browser' in command:
+                self.open_browser()
             elif 'offline' in command:
+                self.assistant_speaks("Going offline...")
                 self.working = False
+            elif 'shell' in command:
+                self.shell_intruction()
+            else:
+                self.assistant_speaks("I can't recognize this command!")
 
 def main():
-    personal1 = personal_assistant("rafael")   # Rapha-L
+    personal1 = personal_assistant("raphael")   # Rapha-L
     # personal1.get_command()
     personal1.run()
     # personal1.assistant_says_time()
