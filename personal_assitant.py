@@ -80,17 +80,20 @@ class personal_assistant():
 
     def shell_intruction(self):
         self.assistant_speaks("What do you want to execute?")
-        shell_command = self.get_command()
-        print(shell_command)
-        self.assistant_speaks("Executing in command in shell")
 
-        try:
-            out = subprocess.run(shell_command.split(' '))
-            self.assistant_speaks("Showing results in actual shell")
-            print("out: ", out)
-    
-        except Exception:
-            self.assistant_speaks("Sir, there's an error with your command. Try again.")
+        while(True):
+            
+            try:
+                shell_command = self.get_command()
+                print(shell_command)
+                self.assistant_speaks("Executing in command in shell")
+                out = subprocess.run(shell_command.split(' '))
+                self.assistant_speaks("Showing results in actual shell")
+                print("out: ", out)
+                break
+
+            except Exception:
+                self.assistant_speaks("Sir, there's an error with your command. Try again.")
 
     def run(self):
 
