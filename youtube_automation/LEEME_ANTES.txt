@@ -1,0 +1,15 @@
+Buenas tardes,
+
+Este trabajo fue realizado por Camilo Laiton, estudiante de la 
+Universidad del Magdalena en Colombia.
+
+[NOTA]: Para el correcto funcionamiento del youtubeBot.py debes crear un archivo
+secrets.py en donde tengas una variable youtube_pro con tu perfil de Youtube y 
+youtube_pw con la contraseña de esa cuenta.
+
+gitbub_pro --> Tu perfil de Youtube.
+github_pw  --> Tu contraseña de Youtube.
+
+Mi perfil de github: github.com/camilolaiton
+
+Hasta luego, saludos!

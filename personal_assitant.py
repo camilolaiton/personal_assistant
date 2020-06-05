@@ -1,8 +1,20 @@
+#!/usr/bin/python3
+
+"""
+    Made by:
+        - Camilo Laiton
+
+        University of Magdalena, Colombia
+        2020-1
+        GitHub: https://github.com/camilolaiton/
+"""
+import pynput
 import pyttsx3
 import datetime
 import speech_recognition as sr
 import webbrowser as wb
 import subprocess
+import youtube_automation
 
 # sudo apt install libespeak1 ||| for fixing bug in linux
 
@@ -68,7 +80,7 @@ class personal_assistant():
 
             except Exception as err:
                 print(err)
-                self.assistant_speaks("Could you please say that again?")
+                # self.assistant_speaks("Could you please say that again?")
         
         return command.lower()
 
@@ -76,7 +88,7 @@ class personal_assistant():
         self.assistant_speaks("Where should I open it?")
         page = self.get_command()
         self.assistant_speaks("Openning in ".format(browsers[0]))
-        self.browser.open(page, new=0, autoraise=True)
+        self.browser.open(page + ".com", new=0, autoraise=True)
 
     def shell_intruction(self):
         self.assistant_speaks("What do you want to execute?")
@@ -94,6 +106,20 @@ class personal_assistant():
 
             except Exception:
                 self.assistant_speaks("Sir, there's an error with your command. Try again.")
+
+    def take_screenshot(self):
+        try:
+            out = subprocess.run(['gnome-screenshot'])
+            print("out: ", out)
+
+        except Exception:
+            self.assistant_speaks("Sir, there's an taking your screenshot. Try again.")
+    
+    def youtube_video(self):
+        self.assistant_speaks("What would you like to watch?")
+        video_name = self.get_command()
+        y = youtube_automation.youtubeBot()
+        y.findYoutubeVideo(video_name)
 
     def run(self):
 
@@ -115,6 +141,10 @@ class personal_assistant():
                 self.working = False
             elif 'shell' in command:
                 self.shell_intruction()
+            elif 'screenshot' in command:
+                self.take_screenshot()
+            elif 'youtube' in command:
+                self.youtube_video()
             else:
                 self.assistant_speaks("I can't recognize this command!")
 
